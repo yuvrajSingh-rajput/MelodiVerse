@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style1.css">
+    <title>Music-Player: Enjoy the World</title>
+    <style>
+        #progress{
+            -webkit-appearance: none;
+            background-color: rgb(205, 44, 71);
+        }
+        #progress::-webkit-slider-thumb{
+            border: white solid;
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background-color: rgb(210, 31, 61);
+        }
+    </style>
+</head>
+<body style="background: linear-gradient(#ff74a4 0%, #975b9c 100%);" class="h-screen relative sm:w-1/3 sm:m-auto sm:py-2 sm:shadow-2xl">
+    <div class="logo flex items-center" style="background-image: linear-gradient(to left, #ff8e8f, #ff7d8b, #fe6b8a, #fb578b, #f7418f);">
+        <h1 class="text-2xl px-3 py-2">Welcome! Yuvraj Singh</h1>
+        <span><i class="fa-solid fa-heart text-red-600 text-xl"></i></span>
+    </div>
+    <hr class="bg-black">
+    <div class="container pt-2">
+        <div class="header flex justify-between px-4 items-center">
+            <div class="down text-2xl"><i class="fa-solid fa-chevron-down"></i></div>
+            <div class="heading text-xl font-semibold"><h1>Now Playing</h1></div>
+            <div class="more text-2xl"><i class="fa-solid fa-ellipsis"></i></div>
+        </div>
+        <div class="info m-4 grid justify-center">
+            <div class="poster rounded-2xl overflow-hidden">
+                <img src="https://i1.sndcdn.com/artworks-g6kJLNBdOq7JsSpj-Vp78mw-t500x500.jpg" alt="" class="h-[364px] w-[364px]">
+            </div>
+            <div class="cover-info grid justify-center text-center gap-1 pt-4">
+                <h1 class="artistName text-2xl font-bold uppercase">Ghar Se Nikalte Hi</h1>
+                <h1 class="text-2xl font-mono">Thakur Release</h1>
+            </div>
+        </div>
+        <div class="controls flex items-center justify-between gap-3 px-3">
+            <div class="currTime">0.00</div>
+            <input type="range" name="progress" id="progress" class="flex-1 h-2 rounded-lg" value="0">
+            <div class="maxTime">3.40</div>
+        </div>
+        <div class="manage mt-2">
+            <div class="flex justify-between items-center text-2xl px-5 cursor-pointer">
+                <div class="shuffle"><i class="fa-solid fa-shuffle"></i></div>
+                <div class="backward text-4xl"><i class="fa-solid fa-backward-step"></i></div>
+                <div class="text-4xl scale-150"><i class="play fa-solid fa-play m-3"></i></div>
+                <div class="forward text-4xl"><i class="fa-solid fa-forward-step"></i></div>
+                <div class="playlist"><i class="bi bi-music-note-list"></i></div>
+            </div>
+        </div>
+        <audio id="song">
+            <source src="BallerShubh.mp3">
+        </audio>
+    </div>
+    <div class="playlistSong absolute bg-[#f4eaeae2] h-min w-full bottom-0 ease-in duration-700 hidden rounded-t-2xl">
+        <div class="headnav text-2xl flex justify-between px-4 py-2">
+            <div class="musiclogo flex gap-2"><i class="bi bi-music-note-beamed"></i><h1 class="">Music List</h1></div>
+            <div class="cross"><i class="fa-solid fa-xmark z-50"></i></div>
+        </div>
+        <hr>
+        <div class="lists grid px-5 gap-1 py-1">
+            <div class="song">
+                <h1 class="name text-xl font-semibold text-[#474545]">Ghar Se Nikalte Hi</h1>
+                <h1 class="artist text-[#474545] text-lg">Armaan Malik</h1>
+            </div>
+            <hr class="bg-[#bbb]">
+            <div class="song">
+                <h1 class="name text-xl font-semibold text-[#474545]">Close Eyes</h1>
+                <h1 class="artist text-[#474545] text-lg">DVRST</h1>
+            </div>
+            <hr class="bg-[#bbb]">
+            <div class="song">
+                <h1 class="name text-xl font-semibold text-[#474545]">Perfect</h1>
+                <h1 class="artist text-[#474545] text-lg">ED Sheeran</h1>
+            </div>
+            <hr class="bg-[#bbb]">
+            <div class="song">
+                <h1 class="name text-xl font-semibold text-[#474545]">Baller</h1>
+                <h1 class="artist text-[#474545] text-lg">Shubh</h1>
+            </div>
+            <hr class="bg-[#bbb]">
+            <div class="song">
+                <h1 class="name text-xl font-semibold text-[#474545]">One Love</h1>
+                <h1 class="artist text-[#474545] text-lg">Shubh</h1>
+            </div>
+            <hr class="bg-[#bbb]">
+        </div>
+    </div>
+    <script>
+        const progress = document.getElementById("progress");
+const nextSong = document.querySelector(".forward");
+const isPlaying = document.querySelector(".play");
+const prevSong = document.querySelector(".backward");
+const song = document.getElementById("song");
+const currPic = document.querySelector(".poster img");
+const currTime = document.querySelector(".currTime");
+const maxTime = document.querySelector(".maxTime");
+const allMediaBtn = document.querySelector(".playlist");
+const playlist = document.querySelector(".playlistSong");
+const cancelBtn = document.querySelector(".cross");
+let index = 4;
+const lists = document.getElementsByClassName("song");
+let allMusic = [
+    {
+      name: "Ghar Se Nikalte Hi",
+      artist: "Armaan Malik",
+      img: "https://c.saavncdn.com/098/Ghar-Se-Nikalte-Hi-Hindi-2018-20180407081907-500x500.jpg",
+      src: "gharSeNikalteHi.mp3"
+    },
+    {
+      name: "Close Eyes",
+      artist: "DVRST",
+      img: "https://i.ytimg.com/vi/RWrsukapz2k/sddefault.jpg",
+      src: "closeEyes.mp3"
+    },
+    {
+      name: "Perfect",
+      artist: "ED Sheeran",
+      img: "https://upload.wikimedia.org/wikipedia/en/8/80/Ed_Sheeran_Perfect_Single_cover.jpg",
+      src: "perfect.mp3"
+    },
+    {
+      name: "Baller",
+      artist: "Shubh",
+      img: "https://i1.sndcdn.com/artworks-g6kJLNBdOq7JsSpj-Vp78mw-t500x500.jpg",
+      src: "BallerShubh.mp3"
+    },
+    {
+      name: "One Love",
+      artist: "Shubh",
+      img: "https://i.ytimg.com/vi/XfXgUZDCAoA/maxresdefault.jpg",
+      src: "oneLove.mp3"
+    }
+]
+nextSong.addEventListener("click", () => {
+    index++;
+    if (index >= allMusic.length) {
+        index = 0;
+    }
+    const nextSrc = allMusic[index].src;
+    currPic.src = allMusic[index].img;
+    console.log("Next song source:", nextSrc); // Log the next song source
+    song.setAttribute('src', nextSrc);
+    document.querySelector(".artistName").innerHTML = allMusic[index].name;
+    // Load and play the new audio file
+    song.load();
+    if(isPlaying.classList.contains("fa-play")){
+        isPlaying.classList.remove("fa-play");
+        isPlaying.classList.add("fa-pause");
+    }
+    song.play();
+});
+
+
+// Update the prevSong event listener
+prevSong.addEventListener("click", () => {
+    index--;
+    if (index < 0) {
+        index = allMusic.length - 1;
+    }
+    const nextSrc = allMusic[index].src;
+    currPic.src = allMusic[index].img;
+    console.log("Next song source:", nextSrc); // Log the next song source
+    song.setAttribute('src', nextSrc);
+    document.querySelector(".artistName").innerHTML = allMusic[index].name;
+    song.load();
+    if(isPlaying.classList.contains("fa-play")){
+        isPlaying.classList.remove("fa-play");
+        isPlaying.classList.add("fa-pause");
+    }
+    song.play();
+});
+
+
+song.onloadedmetadata = () =>{
+    progress.max = song.duration;
+    progress.value = song.currentTime;
+}
+const playPause = () => {
+    if(song.paused){
+        song.play();
+        isPlaying.classList.remove("fa-play");
+        isPlaying.classList.add("fa-pause");
+    }else{
+        song.pause();
+        isPlaying.classList.remove("fa-pause");
+        isPlaying.classList.add("fa-play");
+    }
+}
+isPlaying.addEventListener("click", playPause);
+
+if(!song.pause()){
+    setInterval(() => {
+        progress.value = song.currentTime;
+    }, 500)
+}
+
+const formatTime = (time) => {
+    const minutes = Math.floor(time/60);
+    const seconds = Math.floor(time%60);
+    return `${minutes.toString().padStart(1, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+song.addEventListener('timeupdate', updateTime);
+
+function updateTime() {
+    const currentTime = song.currentTime;
+    const duration = song.duration;
+
+    const currentFormatted = formatTime(currentTime);
+    const durationFormatted = formatTime(duration);
+
+    currTime.innerHTML = currentFormatted;
+    maxTime.innerHTML = durationFormatted;
+}
+
+progress.onchange = ()=>{
+    song.play();
+    song.currentTime = progress.value;
+}
+
+allMediaBtn.addEventListener("click", ()=>{
+    playlist.classList.remove("hidden");
+});
+
+cancelBtn.addEventListener("click", ()=>{
+    playlist.classList.add("hidden");
+});
+
+const playSong = (index) => {
+    const nextSrc = allMusic[index].src;
+    currPic.src = allMusic[index].img;
+    console.log("Next song source:", nextSrc); // Log the next song source
+    song.setAttribute('src', nextSrc);
+    document.querySelector(".artistName").innerHTML = allMusic[index].name;
+    song.load();
+    if (isPlaying.classList.contains("fa-play")) {
+        isPlaying.classList.remove("fa-play");
+        isPlaying.classList.add("fa-pause");
+    }
+    // Play the song
+    song.play();
+};
+
+for(let i = 0; i < lists.length; i++){
+    lists[i].addEventListener("click", ()=>{
+        playSong(i);
+    })
+}
+    </script>
+</body>
+</html>
